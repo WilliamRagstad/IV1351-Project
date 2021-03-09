@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
+import java.util.Properties;
 import java.util.ArrayList;
 import java.sql.Timestamp;
 
@@ -18,13 +19,8 @@ import java.sql.Timestamp;
  * The Data Access Object handles all the database calls.
  */
 public class SoundGoodDAO {
-    private static final String RENTAL_INSTRUMENT_TABLE_NAME = "rental_instrument";
     private static final String RENTAL_INSTRUMENT_PK_COLUMN_NAME = "instrument_id";
-    private static final String RENTAL_INSTRUMENT_TYPE_COLUMN_NAME = "instrument_type";
-    private static final String RENTAL_INSTRUMENT_RETURN_DATE_COLUMN_NAME = "return_date";
-    private static final String RENTAL_INSTRUMENT_FK_COLUMN_NAME = "student_id";
-    private static final String RENTAL_INSTRUMENT_MONTHLY_PRICE_COLUMN_NAME = "monthly_price";
-    private static final String RENTAL_INSTRUMENT_INSTRUMENT_BRAND_COLUMN_NAME = "instrument_brand";
+    private static final String RENTAL_INSTRUMENT_FEE_COLUMN_NAME = "fee";
 
     private Connection connection;
     private PreparedStatement listRentalInstrumentStmt;
@@ -39,41 +35,18 @@ public class SoundGoodDAO {
     public SoundGoodDAO() throws SoundGoodDBException {
         try {
             connectToSoundGood();
-            prepareStatements();
         } catch(ClassNotFoundException | SQLException exception){
             throw new SoundGoodDBException("Could not connect to datasource.", exception);
         }
 
     }
     private void connectToSoundGood() throws ClassNotFoundException, SQLException {
+    	Properties props = new Properties();
+    	props.setProperty("user","fred");
+    	props.setProperty("password","secret");
         connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/soundgood",
                 "postgres", "example");
         connection.setAutoCommit(false);
-    }
-    private void prepareStatements() throws SQLException {
-        listRentalInstrumentStmt = connection.prepareStatement(
-                "SELECT " + RENTAL_INSTRUMENT_PK_COLUMN_NAME + ", " + RENTAL_INSTRUMENT_TYPE_COLUMN_NAME
-                        + ", " + RENTAL_INSTRUMENT_MONTHLY_PRICE_COLUMN_NAME
-                        + ", " + RENTAL_INSTRUMENT_INSTRUMENT_BRAND_COLUMN_NAME
-                        + " FROM " + RENTAL_INSTRUMENT_TABLE_NAME + " WHERE " + RENTAL_INSTRUMENT_RETURN_DATE_COLUMN_NAME + " IS NULL");
-        rentInstrumentStmt = connection.prepareStatement(
-                "UPDATE " + RENTAL_INSTRUMENT_TABLE_NAME + " SET " +
-                        RENTAL_INSTRUMENT_RETURN_DATE_COLUMN_NAME + " = ?, " +
-                        RENTAL_INSTRUMENT_FK_COLUMN_NAME + " = ? WHERE " +
-                        RENTAL_INSTRUMENT_PK_COLUMN_NAME + " = ?");
-
-        getStudentRentalInstrumentsStmt = connection.prepareStatement(
-                "SELECT " + RENTAL_INSTRUMENT_PK_COLUMN_NAME + " FROM " +
-                        RENTAL_INSTRUMENT_TABLE_NAME + " WHERE " +
-                        RENTAL_INSTRUMENT_FK_COLUMN_NAME + " = ? AND " +
-                        RENTAL_INSTRUMENT_RETURN_DATE_COLUMN_NAME + " IS NOT NULL"
-        );
-
-        terminateRentalStmt = connection.prepareStatement(
-                "UPDATE " + RENTAL_INSTRUMENT_TABLE_NAME + " SET " +
-                        RENTAL_INSTRUMENT_RETURN_DATE_COLUMN_NAME + " = NULL WHERE " +
-                        RENTAL_INSTRUMENT_PK_COLUMN_NAME + " = ?");
-
     }
 
     /**
@@ -108,9 +81,11 @@ public class SoundGoodDAO {
             while(result.next()){
                 instruments.add(new Instrument(
                         result.getString(RENTAL_INSTRUMENT_PK_COLUMN_NAME),
-                        result.getString(RENTAL_INSTRUMENT_TYPE_COLUMN_NAME),
-                        result.getInt(RENTAL_INSTRUMENT_MONTHLY_PRICE_COLUMN_NAME),
-                        result.getString(RENTAL_INSTRUMENT_INSTRUMENT_BRAND_COLUMN_NAME)
+                        result.getString("type"),
+                        result.getString("returned"),
+                        result.getString("student_id"),
+                        result.getInt(RENTAL_INSTRUMENT_FEE_COLUMN_NAME),
+                        result.getString("brand")
                         ));
             }
             connection.commit();

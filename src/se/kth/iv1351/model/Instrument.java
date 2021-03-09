@@ -5,7 +5,7 @@ public class Instrument implements InstrumentDTO {
     private String instrumentType;
     private String returnDate;
     private String studentID;
-    private int monthlyPrice;
+    private int fee;
     private String instrumentBrand;
 
     /**
@@ -14,14 +14,14 @@ public class Instrument implements InstrumentDTO {
      * @param instrumentType    The kind of instrument
      * @param returnDate    The date which the instrument can be rented until
      * @param studentID     The ID of the student renting
-     * @param monthlyPrice  The monthly price of renting the instrument
+     * @param fee  The monthly price of renting the instrument
      */
-    public Instrument(String instrumentID, String instrumentType, String returnDate, String studentID, int monthlyPrice,String instrumentBrand){
+    public Instrument(String instrumentID, String instrumentType, String returnDate, String studentID, int fee,String instrumentBrand){
         this.instrumentID = instrumentID;
         this.instrumentType = instrumentType;
         this.returnDate = returnDate;
         this.studentID = studentID;
-        this.monthlyPrice = monthlyPrice;
+        this.fee = fee;
         this.instrumentBrand = instrumentBrand;
     }
     /**
@@ -29,10 +29,10 @@ public class Instrument implements InstrumentDTO {
      * Used to list all instruments that can be rented.
      * @param instrumentID  The ID of the instrument
      * @param instrumentType    The kind of instrument
-     * @param monthlyPrice  The monthly price of renting the instrument
+     * @param fee  The monthly price of renting the instrument
      */
-    public Instrument(String instrumentID, String instrumentType, int monthlyPrice, String instrumentBrand){
-        this(instrumentID, instrumentType, null, null, monthlyPrice, instrumentBrand);
+    public Instrument(String instrumentID, String instrumentType, int fee, String instrumentBrand){
+        this(instrumentID, instrumentType, null, null, fee, instrumentBrand);
     }
     /**
      * Creates an instrument with the specified details.
@@ -86,8 +86,8 @@ public class Instrument implements InstrumentDTO {
     /**
      * @return The Instruments Monthly Price
      */
-    public int getInstrumentMonthlyPrice(){
-        return monthlyPrice;
+    public int getInstrumentFee(){
+        return fee;
     }
     /**
      * @return The Instruments Brand

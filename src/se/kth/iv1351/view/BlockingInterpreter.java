@@ -61,7 +61,7 @@ public class BlockingInterpreter {
                             for (InstrumentDTO instrument : instruments) {
                                 System.out.println("Instrument ID " + instrument.getInstrumentID() + ", "
                                         + "Instrument Type: " + instrument.getInstrumentType() + ", "
-                                        + "Monthly Price: " + instrument.getInstrumentMonthlyPrice() + ", "
+                                        + "Monthly Price: " + instrument.getInstrumentFee() + ", "
                                         + "Instrument Brand: " + instrument.getInstrumentBrand());
                             }
                         } else{
@@ -69,7 +69,7 @@ public class BlockingInterpreter {
                                 if(cmdLine.getParameter(0).equals(instrument.getInstrumentType())) {
                                     System.out.println("Instrument ID " + instrument.getInstrumentID() + ", "
                                             + "Instrument Type: " + instrument.getInstrumentType() + ", "
-                                            + "Monthly Price: " + instrument.getInstrumentMonthlyPrice() + ", "
+                                            + "Monthly Price: " + instrument.getInstrumentFee() + ", "
                                             + "Instrument Brand: " + instrument.getInstrumentBrand());
                                 }
                             }

@@ -20,7 +20,7 @@ public interface InstrumentDTO {
     /**
      * @return The Instruments Monthly Price
      */
-    public int getInstrumentMonthlyPrice();
+    public int getInstrumentFee();
     /**
      * @return The Instruments Brand
      */
