@@ -1,7 +1,6 @@
 package se.kth.iv1351.controller;
 
 import se.kth.iv1351.integration.SoundGoodDAO;
-import se.kth.iv1351.integration.SoundGoodDBException;
 import se.kth.iv1351.model.Instrument;
 
 import java.time.*;
@@ -18,7 +17,7 @@ public class Controller {
      * Creates a new instance of the DAO, which connects to the database.
      * @throws SoundGoodDBException If unable to connect to the database.
      */
-    public Controller() throws SoundGoodDBException{
+    public Controller() throws Exception {
         soundGood = new SoundGoodDAO();
     }
 
@@ -45,7 +44,7 @@ public class Controller {
                 soundGood.rentInstrument(instrument);
                 System.out.println("Instrument " + instrumentID + " is now being rented to student " + studentID);
             } else System.out.println("User already has 2 instruments");
-        } catch (SoundGoodDBException e) {
+        } catch (Exception e) {
             throw new Exception("Could not rent instrument " + instrumentID + " to " + studentID, e);
         }
     }
@@ -59,7 +58,7 @@ public class Controller {
         try {
             soundGood.terminateRental(instrumentID);
             System.out.println("Rental for instrument " + instrumentID + " is now terminated.");
-        } catch (SoundGoodDBException e) {
+        } catch (Exception e) {
             throw new Exception("Could not terminate the rental", e);
         }
     }

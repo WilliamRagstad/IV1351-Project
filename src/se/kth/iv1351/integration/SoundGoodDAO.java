@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import java.lang.Exception;
 import se.kth.iv1351.model.Instrument;
 
 /**
@@ -27,11 +28,11 @@ public class SoundGoodDAO {
      * Creates a new DAO object and connects it to the database.
      * @throws SoundGoodDBException If could not connect to the database.
      */
-    public SoundGoodDAO() throws SoundGoodDBException {
+    public SoundGoodDAO() throws Exception {
         try {
             connectToSoundGood();
         } catch(ClassNotFoundException | SQLException exception){
-            throw new SoundGoodDBException("Could not connect to datasource.", exception);
+            throw new Exception("Could not connect to datasource.", exception);
         }
 
     }
@@ -46,7 +47,7 @@ public class SoundGoodDAO {
      * @param instrumentID The instrument which will have its rental terminated
      * @throws InstrumentException If unable to terminate the rental.
      */
-    public void terminateRental(String instrumentID) throws SoundGoodDBException {
+    public void terminateRental(String instrumentID) throws Exception {
 
         try {
             terminateRentalStmt.setString(1, instrumentID);
@@ -64,7 +65,7 @@ public class SoundGoodDAO {
      * @return Returns the instruments that was retrieved from the database
      * @throws InstrumentException If unable to list the instruments
      */
-    public List<Instrument> listRentalInstruments() throws SoundGoodDBException {
+    public List<Instrument> listRentalInstruments() throws Exception {
         List<Instrument> instruments = new ArrayList<>();
         try(ResultSet result = listRentalInstrumentStmt.executeQuery()){
             while(result.next()){
@@ -89,7 +90,7 @@ public class SoundGoodDAO {
      * @param instrument Information about the instrument and student is kept here.
      * @throws InstrumentException If could not rent.
      */
-    public void rentInstrument(Instrument instrument) throws SoundGoodDBException {
+    public void rentInstrument(Instrument instrument) throws Exception {
         try{
             rentInstrumentStmt.setTimestamp(1, Timestamp.valueOf(instrument.returnDate + " 00:00:00.00"));
             rentInstrumentStmt.setString(2, instrument.studentID);
@@ -111,7 +112,7 @@ public class SoundGoodDAO {
      * @return Returns the quantity of rented instruments
      * @throws SoundGoodDBException If could not retrieve instruments
      */
-    public int getStudentAmountRentalInstruments(Instrument instrument) throws SoundGoodDBException {
+    public int getStudentAmountRentalInstruments(Instrument instrument) throws Exception {
         try {
             getStudentRentalInstrumentsStmt.setString(1, instrument.studentID);
         } catch(SQLException sqle){
@@ -129,16 +130,16 @@ public class SoundGoodDAO {
         return i;
     }
 
-    private void handleException(String failureMsg, Exception cause) throws SoundGoodDBException {
+    private void handleException(String failureMsg, Exception cause) throws Exception {
         try {
             connection.rollback();
         } catch (SQLException rollbackExc) {
         	failureMsg = failureMsg + ". Also failed to rollback transaction because of: " + rollbackExc.getMessage();
         }
         if (cause != null) {
-            throw new SoundGoodDBException(failureMsg, cause);
+            throw new Exception(failureMsg, cause);
         } else {
-            throw new SoundGoodDBException(failureMsg);
+            throw new Exception(failureMsg);
         }
     }
 }
