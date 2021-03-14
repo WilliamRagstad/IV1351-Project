@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Properties;
 import java.util.ArrayList;
 import java.sql.Timestamp;
 import se.kth.iv1351.model.Instrument;

@@ -2,7 +2,8 @@ package se.kth.iv1351.integration;
 
 
 public class SoundGoodDBException extends Exception {
-    /**
+	private static final long serialVersionUID = 1L;
+	/**
      * Creates a new exception based on the cause
      * @param reason The cause of the exception
      */

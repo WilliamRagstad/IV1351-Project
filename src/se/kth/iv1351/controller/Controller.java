@@ -6,7 +6,6 @@ import se.kth.iv1351.model.Instrument;
 
 import java.time.*;
 import java.util.List;
-import java.util.ArrayList;
 
 /**
  * This is the controller of the application. It is responsible to guide all calls to the model
