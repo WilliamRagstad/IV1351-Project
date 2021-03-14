@@ -111,7 +111,7 @@ public class SoundGoodDAO {
         try(ResultSet result = listRentalInstrumentStmt.executeQuery()){
             while(result.next()){
                 instruments.add(new Instrument(
-                        result.getString(RENTAL_INSTRUMENT_PK_COLUMN_NAME),
+                        result.getString(RENTAL_INSTRUMENT_FK_COLUMN_NAME),
                         result.getString("name"),
                         result.getString("kind"),
                         result.getString("brand"),
