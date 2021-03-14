@@ -39,7 +39,6 @@ public class Controller {
      * @throws InstrumentException If could not rent.
      */
     public void rentInstrument(String instrumentID, String studentID) throws Exception  {
-        String failureMsg = "Could not rent instrument " + instrumentID + " to " + studentID;
         try {
             Instrument instrument  = new Instrument(instrumentID, studentID, getReturnDate());
             if(soundGood.getStudentAmountRentalInstruments(instrument)<2) {
@@ -47,7 +46,7 @@ public class Controller {
                 System.out.println("Instrument " + instrumentID + " is now being rented to student " + studentID);
             } else System.out.println("User already has 2 instruments");
         } catch (SoundGoodDBException e) {
-            throw new Exception(failureMsg, e);
+            throw new Exception("Could not rent instrument " + instrumentID + " to " + studentID, e);
         }
     }
 
@@ -57,12 +56,11 @@ public class Controller {
      * @throws InstrumentException If unable to terminate the rental.
      */
     public void terminateRental(String instrumentID) throws Exception {
-        String failureMsg = "Could not terminate the rental";
         try {
             soundGood.terminateRental(instrumentID);
             System.out.println("Rental for instrument " + instrumentID + " is now terminated.");
         } catch (SoundGoodDBException e) {
-            throw new Exception(failureMsg, e);
+            throw new Exception("Could not terminate the rental", e);
         }
     }
     private String getReturnDate(){
