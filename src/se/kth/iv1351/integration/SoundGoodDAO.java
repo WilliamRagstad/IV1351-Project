@@ -15,8 +15,19 @@ import se.kth.iv1351.model.Instrument;
  * The Data Access Object handles all the database calls.
  */
 public class SoundGoodDAO {
-    private static final String RENTAL_INSTRUMENT_PK_COLUMN_NAME = "instrument_id";
-    private static final String RENTAL_INSTRUMENT_FEE_COLUMN_NAME = "fee";
+    private static final String INSTRUMENT_TABLE_NAME = "instrument";
+    private static final String INSTRUMENT_PK_COLUMN_NAME = "instrument_id";
+    private static final String INSTRUMENT_NAME_COLUMN_NAME = "name";
+    private static final String INSTRUMENT_BRAND_COLUMN_NAME = "brand";
+    private static final String INSTRUMENT_KIND_COLUMN_NAME = "kind";
+    private static final String INSTRUMENT_SIZE_COLUMN_NAME = "size";
+    private static final String INSTRUMENT_FEE_COLUMN_NAME = "fee";
+    
+    private static final String RENTAL_TABLE_NAME = "rental";
+    private static final String RENTAL_INSTRUMENT_FK_COLUMN_NAME = "instrument_id";
+    private static final String RENTAL_STUDENT_FK_COLUMN_NAME = "student_id";
+    private static final String RENTAL_DURATION_COLUMN_NAME = "days";
+    private static final String RENTAL_RETURNED_COLUMN_NAME = "returned";
 
     private Connection connection;
     private PreparedStatement listRentalInstrumentStmt;
@@ -30,16 +41,46 @@ public class SoundGoodDAO {
      */
     public SoundGoodDAO() throws Exception {
         try {
-            connectToSoundGood();
+            connectToDatabase();
+            prepareStatements();
         } catch(ClassNotFoundException | SQLException exception){
             throw new Exception("Could not connect to datasource.", exception);
         }
 
     }
-    private void connectToSoundGood() throws ClassNotFoundException, SQLException {
-        connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/soundgood",
-                "postgres", "example");
+    
+    private void connectToDatabase() throws ClassNotFoundException, SQLException {
+    	connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/soundgood", "postgres", "example");
         connection.setAutoCommit(false);
+    }
+    
+    private void prepareStatements() throws SQLException {
+        listRentalInstrumentStmt = connection.prepareStatement(
+                "SELECT " + INSTRUMENT_TABLE_NAME + "." + INSTRUMENT_PK_COLUMN_NAME
+                		+ ", " + INSTRUMENT_KIND_COLUMN_NAME
+                        + ", " + INSTRUMENT_FEE_COLUMN_NAME
+                        + ", " + INSTRUMENT_BRAND_COLUMN_NAME
+                + " FROM " + INSTRUMENT_TABLE_NAME
+                + "LEFT JOIN " + RENTAL_TABLE_NAME + " ON " + RENTAL_TABLE_NAME + "." + RENTAL_INSTRUMENT_FK_COLUMN_NAME + " = " + INSTRUMENT_TABLE_NAME + "." + INSTRUMENT_PK_COLUMN_NAME
+                + " WHERE " + RENTAL_RETURNED_COLUMN_NAME + " = TRUE");
+        rentInstrumentStmt = connection.prepareStatement(
+                "UPDATE " + RENTAL_TABLE_NAME + " SET " +
+                        RENTAL_RETURNED_COLUMN_NAME + " = ?, " +
+                        RENTAL_STUDENT_FK_COLUMN_NAME + " = ? WHERE " +
+                        RENTAL_INSTRUMENT_FK_COLUMN_NAME + " = ?");
+
+        getStudentRentalInstrumentsStmt = connection.prepareStatement(
+                "SELECT " + INSTRUMENT_TABLE_NAME + "." + INSTRUMENT_PK_COLUMN_NAME
+                		+ " FROM " + INSTRUMENT_TABLE_NAME
+                		+ "LEFT JOIN " + RENTAL_TABLE_NAME + " ON " + RENTAL_TABLE_NAME + "." + RENTAL_INSTRUMENT_FK_COLUMN_NAME + " = " + INSTRUMENT_TABLE_NAME + "." + INSTRUMENT_PK_COLUMN_NAME
+                		+ " WHERE " + RENTAL_STUDENT_FK_COLUMN_NAME + " = ? AND " + RENTAL_RETURNED_COLUMN_NAME + " = FALSE"
+        );
+
+        terminateRentalStmt = connection.prepareStatement(
+                "UPDATE " + RENTAL_TABLE_NAME + " SET " +
+                        RENTAL_RETURNED_COLUMN_NAME + " = TRUE WHERE " +
+                        RENTAL_INSTRUMENT_FK_COLUMN_NAME + " = ?");
+
     }
 
     /**
@@ -71,11 +112,13 @@ public class SoundGoodDAO {
             while(result.next()){
                 instruments.add(new Instrument(
                         result.getString(RENTAL_INSTRUMENT_PK_COLUMN_NAME),
-                        result.getString("type"),
+                        result.getString("name"),
+                        result.getString("kind"),
+                        result.getString("brand"),
+                        result.getString("size"),
                         result.getString("returned"),
                         result.getString("student_id"),
-                        result.getInt(RENTAL_INSTRUMENT_FEE_COLUMN_NAME),
-                        result.getString("brand")
+                        result.getInt("fee")
                         ));
             }
             connection.commit();

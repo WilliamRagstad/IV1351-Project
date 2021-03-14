@@ -2,11 +2,13 @@ package se.kth.iv1351.model;
 
 public class Instrument {
     public String instrumentID;
-    public String instrumentType;
+    public String instrumentName;
+    public String instrumentKind;
+    public String instrumentBrand;
+    public String instrumentSize;
     public String returnDate;
     public String studentID;
     public int fee;
-    public String instrumentBrand;
 
     /**
      * Creates an instrument with the specified details.
@@ -16,13 +18,15 @@ public class Instrument {
      * @param studentID     The ID of the student renting
      * @param fee  The monthly price of renting the instrument
      */
-    public Instrument(String instrumentID, String instrumentType, String returnDate, String studentID, int fee,String instrumentBrand){
+    public Instrument(String instrumentID, String instrumentName, String instrumentKind, String instrumentBrand, String instrumentSize, String returnDate, String studentID, int fee){
         this.instrumentID = instrumentID;
-        this.instrumentType = instrumentType;
+        this.instrumentName = instrumentName;
+        this.instrumentKind = instrumentKind;
+        this.instrumentBrand = instrumentBrand;
+        this.instrumentSize = instrumentSize;
         this.returnDate = returnDate;
         this.studentID = studentID;
         this.fee = fee;
-        this.instrumentBrand = instrumentBrand;
     }
     /**
      * Creates an instrument with the specified details.
@@ -31,8 +35,8 @@ public class Instrument {
      * @param instrumentType    The kind of instrument
      * @param fee  The monthly price of renting the instrument
      */
-    public Instrument(String instrumentID, String instrumentType, int fee, String instrumentBrand){
-        this(instrumentID, instrumentType, null, null, fee, instrumentBrand);
+    public Instrument(String instrumentID, String instrumentType, int fee, String instrumentBrand) {
+        this(instrumentID, null, instrumentType, instrumentBrand, null, null, null, fee);
     }
     /**
      * Creates an instrument with the specified details.
@@ -41,7 +45,7 @@ public class Instrument {
      * @param returnDate    The date which the instrument can be rented until
      * @param studentID     The ID of the student renting
      */
-    public Instrument(String instrumentID, String studentID, String returnDate){
-        this(instrumentID, null, returnDate, studentID, 0, null);
+    public Instrument(String instrumentID, String studentID, String returnDate) {
+        this(instrumentID, null, null, null, null, returnDate, studentID, 0);
     }
 }

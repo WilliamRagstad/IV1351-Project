@@ -39,7 +39,7 @@ public class Interpreter {
                     case LIST:
                         for (Instrument instrument : controller.listRentalInstruments()) System.out.println(
                         		"Instrument ID: " + instrument.instrumentID + ", " + 
-	                            "Instrument Type: " + instrument.instrumentType + ", " +
+	                            "Instrument Type: " + instrument.instrumentKind + ", " +
 	                            "Monthly Price: " + instrument.fee + ", " +
 	                            "Instrument Brand: " + instrument.instrumentBrand);
                         break;
