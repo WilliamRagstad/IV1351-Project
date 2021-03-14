@@ -6,58 +6,44 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Interpreter {
-    private static final String PROMPT = "> ";
     private final Scanner console = new Scanner(System.in);
-    private Controller ctrl;
-    private boolean keepReceivingCmds = false;
+    private Controller controller;
 
-    /**
-     * Creates a new instance that will use the specified controller for all operations.
-     *
-     * @param ctrl The controller used by this instance.
-     */
-    public Interpreter(Controller ctrl) {
-        this.ctrl = ctrl;
+    public Interpreter(Controller controller) {
+        this.controller = controller;
     }
 
-    /**
-     * Stops the commend interpreter.
-     */
-    public void stop() {
-        keepReceivingCmds = false;
-    }
-
-    /**
-     * Interprets and performs user commands. This method will not return until the
-     * UI has been stopped. The UI is stopped either when the user gives the
-     * "quit" command, or when the method <code>stop()</code> is called.
-     */
     public void run() {
-        keepReceivingCmds = true;
-        while (keepReceivingCmds) {
+        while (true) {
             try {
-                CmdLine cmdLine = new CmdLine(readNextLine());
-                switch (cmdLine.getCmd()) {
+            	System.out.println("> ");
+            	String[] params = console.nextLine().split(" ");
+            	Command command;
+            	try {
+            		command = Command.valueOf(params[0].toUpperCase());
+                } catch (Exception e) {
+                	command = Command.ILLEGAL_COMMAND;
+                }
+                
+                switch (command) {
                     case HELP:
-                        for (Command command : Command.values()) {
-                            if (command == Command.ILLEGAL_COMMAND) {
+                        for (Command c : Command.values()) {
+                            if (c == Command.ILLEGAL_COMMAND) {
                                 continue;
                             }
-                            System.out.println(command.toString().toLowerCase());
+                            System.out.println(c);
                         }
                         break;
-                    case QUIT:
-                        keepReceivingCmds = false;
-                        break;
+                    case QUIT: return;
                     case RENT:
-                        ctrl.rentInstrument(cmdLine.getParameter(0), cmdLine.getParameter(1));
+                        controller.rentInstrument(params[1], params[2]);
                         break;
                     case END:
-                        ctrl.terminateRental(cmdLine.getParameter(0));
+                        controller.terminateRental(params[1]);
                     case LIST:
                         List<? extends InstrumentDTO> instruments = null;
-                        instruments = ctrl.listRentalInstruments();
-                        if(cmdLine.getParameter(0).equals("")) {
+                        instruments = controller.listRentalInstruments();
+                        if(params[1].equals("")) {
                             for (InstrumentDTO instrument : instruments) {
                                 System.out.println("Instrument ID " + instrument.getInstrumentID() + ", "
                                         + "Instrument Type: " + instrument.getInstrumentType() + ", "
@@ -66,7 +52,7 @@ public class Interpreter {
                             }
                         } else{
                             for (InstrumentDTO instrument : instruments) {
-                                if(cmdLine.getParameter(0).equals(instrument.getInstrumentType())) {
+                                if(params[1].equals(instrument.getInstrumentType())) {
                                     System.out.println("Instrument ID " + instrument.getInstrumentID() + ", "
                                             + "Instrument Type: " + instrument.getInstrumentType() + ", "
                                             + "Monthly Price: " + instrument.getInstrumentFee() + ", "
@@ -85,10 +71,5 @@ public class Interpreter {
                 e.printStackTrace();
             }
         }
-    }
-
-    private String readNextLine() {
-        System.out.print(PROMPT);
-        return console.nextLine();
     }
 }
