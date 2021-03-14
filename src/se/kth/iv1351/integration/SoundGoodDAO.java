@@ -47,17 +47,16 @@ public class SoundGoodDAO {
      * @throws InstrumentException If unable to terminate the rental.
      */
     public void terminateRental(String instrumentID) throws SoundGoodDBException {
-        String failureMsg = "Could not terminate the rental";
 
         try {
             terminateRentalStmt.setString(1, instrumentID);
             int updatedRows = terminateRentalStmt.executeUpdate();
             if (updatedRows != 1) {
-                handleException(failureMsg, null);
+                handleException("Could not terminate the rental", null);
             }
             connection.commit();
         } catch(SQLException sqle){
-            handleException(failureMsg, sqle);
+            handleException("Could not terminate the rental", sqle);
         }
     }
     /**
@@ -66,8 +65,6 @@ public class SoundGoodDAO {
      * @throws InstrumentException If unable to list the instruments
      */
     public List<Instrument> listRentalInstruments() throws SoundGoodDBException {
-        String failureMsg = "Could not list any instruments.";
-
         List<Instrument> instruments = new ArrayList<>();
         try(ResultSet result = listRentalInstrumentStmt.executeQuery()){
             while(result.next()){
@@ -82,7 +79,7 @@ public class SoundGoodDAO {
             }
             connection.commit();
         } catch(SQLException sqle){
-            handleException(failureMsg, sqle);
+            handleException("Could not list any instruments.", sqle);
         }
         return instruments;
     }
@@ -93,19 +90,17 @@ public class SoundGoodDAO {
      * @throws InstrumentException If could not rent.
      */
     public void rentInstrument(Instrument instrument) throws SoundGoodDBException {
-        String failureMsg = "Could not rent the instrument: " + instrument;
-
         try{
             rentInstrumentStmt.setTimestamp(1, Timestamp.valueOf(instrument.returnDate + " 00:00:00.00"));
             rentInstrumentStmt.setString(2, instrument.studentID);
             rentInstrumentStmt.setString(3, instrument.instrumentID);
             int updatedRows = rentInstrumentStmt.executeUpdate();
             if (updatedRows != 1) {
-                handleException(failureMsg, null);
+                handleException("Could not rent the instrument: " + instrument, null);
             }
             connection.commit();
         } catch(SQLException sqle){
-            handleException(failureMsg, sqle);
+            handleException("Could not rent the instrument: " + instrument, sqle);
         }
 
     }
@@ -117,11 +112,10 @@ public class SoundGoodDAO {
      * @throws SoundGoodDBException If could not retrieve instruments
      */
     public int getStudentAmountRentalInstruments(Instrument instrument) throws SoundGoodDBException {
-        String failureMsg = "Could not retrieve instruments";
         try {
             getStudentRentalInstrumentsStmt.setString(1, instrument.studentID);
         } catch(SQLException sqle){
-            handleException(failureMsg, sqle);
+            handleException("Could not retrieve instruments", sqle);
         }
         int i = 0;
         try(ResultSet result = getStudentRentalInstrumentsStmt.executeQuery()){
@@ -130,18 +124,16 @@ public class SoundGoodDAO {
             }
             connection.commit();
         } catch(SQLException sqle){
-            handleException(failureMsg, sqle);
+            handleException("Could not retrieve instruments", sqle);
         }
         return i;
     }
 
     private void handleException(String failureMsg, Exception cause) throws SoundGoodDBException {
-        String completeFailureMsg = failureMsg;
         try {
             connection.rollback();
         } catch (SQLException rollbackExc) {
-            completeFailureMsg = completeFailureMsg +
-                    ". Also failed to rollback transaction because of: " + rollbackExc.getMessage();
+        	failureMsg = failureMsg + ". Also failed to rollback transaction because of: " + rollbackExc.getMessage();
         }
         if (cause != null) {
             throw new SoundGoodDBException(failureMsg, cause);
