@@ -8,7 +8,13 @@ public class Main {
 	private static SoundGoodDAO soundgood;
 	
     public static void main(String[] args) throws Exception {
-    	soundgood = new SoundGoodDAO(); // Exception prone
-        new Interpreter(new Controller(soundgood)).run(); // No exceptions
+    	try {
+    		soundgood = new SoundGoodDAO();
+    	}
+    	catch (Exception e) {
+    		System.out.println("Could not connect to the Soundgood database: " + e.getMessage());
+    		return;
+    	}
+        new Interpreter(new Controller(soundgood)).run();
     }
 }
