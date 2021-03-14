@@ -5,7 +5,7 @@ import se.kth.iv1351.model.InstrumentDTO;
 import java.util.List;
 import java.util.Scanner;
 
-public class BlockingInterpreter {
+public class Interpreter {
     private static final String PROMPT = "> ";
     private final Scanner console = new Scanner(System.in);
     private Controller ctrl;
@@ -16,7 +16,7 @@ public class BlockingInterpreter {
      *
      * @param ctrl The controller used by this instance.
      */
-    public BlockingInterpreter(Controller ctrl) {
+    public Interpreter(Controller ctrl) {
         this.ctrl = ctrl;
     }
 
@@ -32,7 +32,7 @@ public class BlockingInterpreter {
      * UI has been stopped. The UI is stopped either when the user gives the
      * "quit" command, or when the method <code>stop()</code> is called.
      */
-    public void handleCmds() {
+    public void run() {
         keepReceivingCmds = true;
         while (keepReceivingCmds) {
             try {
