@@ -22,17 +22,13 @@ public class Interpreter {
             	try {
             		command = Command.valueOf(params[0].toUpperCase());
                 } catch (Exception e) {
-                	command = Command.ILLEGAL_COMMAND;
+                	System.out.println("Illegal command! Use Help to list all available commands.");
+                	continue;
                 }
                 
                 switch (command) {
                     case HELP:
-                        for (Command c : Command.values()) {
-                            if (c == Command.ILLEGAL_COMMAND) {
-                                continue;
-                            }
-                            System.out.println(c);
-                        }
+                        for (Command c : Command.values()) System.out.println(c);
                         break;
                     case QUIT: return;
                     case RENT:
@@ -62,8 +58,6 @@ public class Interpreter {
                         }
 
                         break;
-                    default:
-                        System.out.println("illegal command");
                 }
             } catch (Exception e) {
                 System.out.println("Operation failed");
