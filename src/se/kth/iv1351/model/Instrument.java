@@ -6,7 +6,7 @@ public class Instrument {
     public String instrumentKind;
     public String instrumentBrand;
     public String instrumentSize;
-    public String returnDate;
+    public String returnDuration;
     public String studentID;
     public int fee;
 
@@ -18,13 +18,13 @@ public class Instrument {
      * @param studentID     The ID of the student renting
      * @param fee  The monthly price of renting the instrument
      */
-    public Instrument(String instrumentID, String instrumentName, String instrumentKind, String instrumentBrand, String instrumentSize, String returnDate, String studentID, int fee){
+    public Instrument(String instrumentID, String instrumentName, String instrumentKind, String instrumentBrand, String instrumentSize, String returnDuration, String studentID, int fee){
         this.instrumentID = instrumentID;
         this.instrumentName = instrumentName;
         this.instrumentKind = instrumentKind;
         this.instrumentBrand = instrumentBrand;
         this.instrumentSize = instrumentSize;
-        this.returnDate = returnDate;
+        this.returnDuration = returnDuration;
         this.studentID = studentID;
         this.fee = fee;
     }
@@ -45,7 +45,7 @@ public class Instrument {
      * @param returnDate    The date which the instrument can be rented until
      * @param studentID     The ID of the student renting
      */
-    public Instrument(String instrumentID, String studentID, String returnDate) {
-        this(instrumentID, null, null, null, null, returnDate, studentID, 0);
+    public Instrument(String instrumentID, String studentID, String returnDuration) {
+        this(instrumentID, null, null, null, null, returnDuration, studentID, 0);
     }
 }

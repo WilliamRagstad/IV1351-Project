@@ -135,7 +135,7 @@ public class SoundGoodDAO {
      */
     public void rentInstrument(Instrument instrument) throws Exception {
         try{
-            rentInstrumentStmt.setTimestamp(1, Timestamp.valueOf(instrument.returnDate + " 00:00:00.00"));
+            rentInstrumentStmt.setTimestamp(1, Timestamp.valueOf(instrument.returnDuration + " 00:00:00.00"));
             rentInstrumentStmt.setString(2, instrument.studentID);
             rentInstrumentStmt.setString(3, instrument.instrumentID);
             int updatedRows = rentInstrumentStmt.executeUpdate();
