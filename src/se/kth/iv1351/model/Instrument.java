@@ -1,12 +1,12 @@
 package se.kth.iv1351.model;
 
-public class Instrument implements InstrumentDTO {
-    private String instrumentID;
-    private String instrumentType;
-    private String returnDate;
-    private String studentID;
-    private int fee;
-    private String instrumentBrand;
+public class Instrument {
+    public String instrumentID;
+    public String instrumentType;
+    public String returnDate;
+    public String studentID;
+    public int fee;
+    public String instrumentBrand;
 
     /**
      * Creates an instrument with the specified details.
@@ -44,56 +44,4 @@ public class Instrument implements InstrumentDTO {
     public Instrument(String instrumentID, String studentID, String returnDate){
         this(instrumentID, null, returnDate, studentID, 0, null);
     }
-
-    /**
-     * @param returnDate Sets the return date.
-     */
-    public void setReturnDate(String returnDate){
-        this.returnDate = returnDate;
-    }
-
-    /**
-     * @param studentID Sets the student ID.
-     */
-    public void setStudentID(String studentID){
-        this.studentID = studentID;
-    }
-
-    /**
-     * @return The Instrument ID
-     */
-    public String getInstrumentID(){
-        return instrumentID;
-    }
-    /**
-     * @return The Instrument Type
-     */
-    public String getInstrumentType(){
-        return instrumentType;
-    }
-    /**
-     * @return The Return Date
-     */
-    public String getReturnDate(){
-        return returnDate;
-    }
-    /**
-     * @return The Student ID
-     */
-    public String getStudentID(){
-        return studentID;
-    }
-    /**
-     * @return The Instruments Monthly Price
-     */
-    public int getInstrumentFee(){
-        return fee;
-    }
-    /**
-     * @return The Instruments Brand
-     */
-    public String getInstrumentBrand(){
-        return instrumentBrand;
-    }
-
 }

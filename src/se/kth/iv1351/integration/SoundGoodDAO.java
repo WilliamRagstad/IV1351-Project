@@ -1,19 +1,15 @@
 package se.kth.iv1351.integration;
-import se.kth.iv1351.model.Instrument;
-import se.kth.iv1351.model.InstrumentDTO;
-import se.kth.iv1351.model.InstrumentException;
 
 import java.sql.Connection;
-import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.List;
 import java.util.Properties;
 import java.util.ArrayList;
 import java.sql.Timestamp;
+import se.kth.iv1351.model.Instrument;
 
 /**
  * The Data Access Object handles all the database calls.
@@ -41,9 +37,6 @@ public class SoundGoodDAO {
 
     }
     private void connectToSoundGood() throws ClassNotFoundException, SQLException {
-    	Properties props = new Properties();
-    	props.setProperty("user","fred");
-    	props.setProperty("password","secret");
         connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/soundgood",
                 "postgres", "example");
         connection.setAutoCommit(false);
@@ -73,7 +66,7 @@ public class SoundGoodDAO {
      * @return Returns the instruments that was retrieved from the database
      * @throws InstrumentException If unable to list the instruments
      */
-    public List<Instrument>listRentalInstruments() throws SoundGoodDBException {
+    public List<Instrument> listRentalInstruments() throws SoundGoodDBException {
         String failureMsg = "Could not list any instruments.";
 
         List<Instrument> instruments = new ArrayList<>();
@@ -96,17 +89,17 @@ public class SoundGoodDAO {
     }
     /**
      * Rents an instrument by updating the database with student id and instrument id.
-     * It checks first if the renting student has 2 or more current rentals and if not succesfully rents.
+     * It checks first if the renting student has 2 or more current rentals and if not successfully rents.
      * @param instrument Information about the instrument and student is kept here.
      * @throws InstrumentException If could not rent.
      */
-    public void rentInstrument(InstrumentDTO instrument) throws SoundGoodDBException {
+    public void rentInstrument(Instrument instrument) throws SoundGoodDBException {
         String failureMsg = "Could not rent the instrument: " + instrument;
 
         try{
-            rentInstrumentStmt.setTimestamp(1, Timestamp.valueOf(instrument.getReturnDate() + " 00:00:00.00"));
-            rentInstrumentStmt.setString(2, instrument.getStudentID());
-            rentInstrumentStmt.setString(3, instrument.getInstrumentID());
+            rentInstrumentStmt.setTimestamp(1, Timestamp.valueOf(instrument.returnDate + " 00:00:00.00"));
+            rentInstrumentStmt.setString(2, instrument.studentID);
+            rentInstrumentStmt.setString(3, instrument.instrumentID);
             int updatedRows = rentInstrumentStmt.executeUpdate();
             if (updatedRows != 1) {
                 handleException(failureMsg, null);
@@ -124,10 +117,10 @@ public class SoundGoodDAO {
      * @return Returns the quantity of rented instruments
      * @throws SoundGoodDBException If could not retrieve instruments
      */
-    public int getStudentAmountRentalInstruments(InstrumentDTO instrument) throws SoundGoodDBException {
+    public int getStudentAmountRentalInstruments(Instrument instrument) throws SoundGoodDBException {
         String failureMsg = "Could not retrieve instruments";
         try {
-            getStudentRentalInstrumentsStmt.setString(1, instrument.getStudentID());
+            getStudentRentalInstrumentsStmt.setString(1, instrument.studentID);
         } catch(SQLException sqle){
             handleException(failureMsg, sqle);
         }

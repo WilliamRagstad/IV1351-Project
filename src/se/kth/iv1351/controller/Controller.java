@@ -3,8 +3,6 @@ package se.kth.iv1351.controller;
 import se.kth.iv1351.integration.SoundGoodDAO;
 import se.kth.iv1351.integration.SoundGoodDBException;
 import se.kth.iv1351.model.Instrument;
-import se.kth.iv1351.model.InstrumentDTO;
-import se.kth.iv1351.model.InstrumentException;
 
 import java.time.*;
 import java.util.List;
@@ -28,24 +26,20 @@ public class Controller {
     /**
      * Lists all the instruments
      * @return Returns the instruments that was retrieved from the database
-     * @throws InstrumentException If unable to list the instruments
+     * @throws Exception If unable to list the instruments
      */
-    public List<? extends InstrumentDTO> listRentalInstruments() throws InstrumentException {
-        try {
-            return soundGood.listRentalInstruments();
-        } catch (Exception e) {
-            throw new InstrumentException("Unable to list instrument. ", e);
-        }
+    public List<Instrument> listRentalInstruments() throws Exception {
+        return soundGood.listRentalInstruments();
     }
 
     /**
      * Rents an instrument by updating the database with student id and instrument id.
-     * It checks first if the renting student has 2 or more current rentals and if not succesfully rents.
+     * It checks first if the renting student has 2 or more current rentals and if not successfully rents.
      * @param instrumentID The ID of the instrument being rented
      * @param studentID The ID of the student renting
      * @throws InstrumentException If could not rent.
      */
-    public void rentInstrument(String instrumentID, String studentID) throws InstrumentException  {
+    public void rentInstrument(String instrumentID, String studentID) throws Exception  {
         String failureMsg = "Could not rent instrument " + instrumentID + " to " + studentID;
         try {
             Instrument instrument  = new Instrument(instrumentID, studentID, getReturnDate());
@@ -54,7 +48,7 @@ public class Controller {
                 System.out.println("Instrument " + instrumentID + " is now being rented to student " + studentID);
             } else System.out.println("User already has 2 instruments");
         } catch (SoundGoodDBException e) {
-            throw new InstrumentException(failureMsg, e);
+            throw new Exception(failureMsg, e);
         }
     }
 
@@ -63,13 +57,13 @@ public class Controller {
      * @param instrumentID The instrument which will have its rental terminated
      * @throws InstrumentException If unable to terminate the rental.
      */
-    public void terminateRental(String instrumentID) throws InstrumentException {
+    public void terminateRental(String instrumentID) throws Exception {
         String failureMsg = "Could not terminate the rental";
         try {
             soundGood.terminateRental(instrumentID);
             System.out.println("Rental for instrument " + instrumentID + " is now terminated.");
         } catch (SoundGoodDBException e) {
-            throw new InstrumentException(failureMsg, e);
+            throw new Exception(failureMsg, e);
         }
     }
     private String getReturnDate(){

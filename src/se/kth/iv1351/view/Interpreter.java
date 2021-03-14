@@ -1,8 +1,7 @@
 package se.kth.iv1351.view;
-import se.kth.iv1351.controller.Controller;
-import se.kth.iv1351.model.InstrumentDTO;
 
-import java.util.List;
+import se.kth.iv1351.controller.Controller;
+import se.kth.iv1351.model.Instrument;
 import java.util.Scanner;
 
 public class Interpreter {
@@ -27,36 +26,22 @@ public class Interpreter {
                 }
                 
                 switch (command) {
+                	case QUIT: return;
                     case HELP:
                         for (Command c : Command.values()) System.out.println(c);
                         break;
-                    case QUIT: return;
                     case RENT:
                         controller.rentInstrument(params[1], params[2]);
                         break;
                     case END:
                         controller.terminateRental(params[1]);
+                        break;
                     case LIST:
-                        List<? extends InstrumentDTO> instruments = null;
-                        instruments = controller.listRentalInstruments();
-                        if(params[1].equals("")) {
-                            for (InstrumentDTO instrument : instruments) {
-                                System.out.println("Instrument ID " + instrument.getInstrumentID() + ", "
-                                        + "Instrument Type: " + instrument.getInstrumentType() + ", "
-                                        + "Monthly Price: " + instrument.getInstrumentFee() + ", "
-                                        + "Instrument Brand: " + instrument.getInstrumentBrand());
-                            }
-                        } else{
-                            for (InstrumentDTO instrument : instruments) {
-                                if(params[1].equals(instrument.getInstrumentType())) {
-                                    System.out.println("Instrument ID " + instrument.getInstrumentID() + ", "
-                                            + "Instrument Type: " + instrument.getInstrumentType() + ", "
-                                            + "Monthly Price: " + instrument.getInstrumentFee() + ", "
-                                            + "Instrument Brand: " + instrument.getInstrumentBrand());
-                                }
-                            }
-                        }
-
+                        for (Instrument instrument : controller.listRentalInstruments()) System.out.println(
+                        		"Instrument ID: " + instrument.instrumentID + ", " + 
+	                            "Instrument Type: " + instrument.instrumentType + ", " +
+	                            "Monthly Price: " + instrument.fee + ", " +
+	                            "Instrument Brand: " + instrument.instrumentBrand);
                         break;
                 }
             } catch (Exception e) {
