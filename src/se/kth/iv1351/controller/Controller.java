@@ -17,8 +17,8 @@ public class Controller {
      * Creates a new instance of the DAO, which connects to the database.
      * @throws SoundGoodDBException If unable to connect to the database.
      */
-    public Controller() throws Exception {
-        soundGood = new SoundGoodDAO();
+    public Controller(SoundGoodDAO soundGood) {
+        this.soundGood = soundGood;
     }
 
     /**
