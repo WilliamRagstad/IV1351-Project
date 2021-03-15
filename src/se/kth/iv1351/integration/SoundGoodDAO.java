@@ -1,6 +1,5 @@
 package se.kth.iv1351.integration;
 
-
 import java.sql.Connection;
 import java.sql.DatabaseMetaData;
 import java.sql.DriverManager;
@@ -52,17 +51,11 @@ public class SoundGoodDAO {
      * @throws SoundGoodDBException If could not connect to the database.
      */
     public SoundGoodDAO() throws Exception {
-        try {
-            connectToDatabase();
-            prepareStatements();
-        } catch(ClassNotFoundException | SQLException exception){
-            throw new Exception("Could not connect to datasource.", exception);
-        }
-
+        connectToDatabase();
+        prepareStatements();
     }
     
     private void connectToDatabase() throws ClassNotFoundException, SQLException {
-    	Class.forName("org.postgresql.Driver");
     	connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/soundgood", "postgres", "example"); // PostgreSQL is default running on 5432.
     	connection.setAutoCommit(false);
     }
