@@ -1,14 +1,26 @@
 package se.kth.iv1351.integration;
 
+
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.List;
-import java.util.ArrayList;
 import java.sql.Timestamp;
+
+import java.util.List;
+import java.util.Properties;
+import java.util.ArrayList;
 import java.lang.Exception;
+
 import se.kth.iv1351.model.Instrument;
 
 /**
@@ -50,8 +62,9 @@ public class SoundGoodDAO {
     }
     
     private void connectToDatabase() throws ClassNotFoundException, SQLException {
-    	connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/soundgood", "postgres", "example");
-        connection.setAutoCommit(false);
+    	Class.forName("org.postgresql.Driver");
+    	connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/soundgood", "postgres", "example"); // PostgreSQL is default running on 5432.
+    	connection.setAutoCommit(false);
     }
     
     private void prepareStatements() throws SQLException {
